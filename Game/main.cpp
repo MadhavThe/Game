@@ -26,7 +26,7 @@ int main(int argc, char* args[]) {
 
     
     SDL_SetRenderDrawColor(render1, 255, 255, 0, 255);  // Set draw color to yellow for visibility
-    //SDL_RenderDrawPoint(render1, 4, 6); // Draw a point at (0, 0)
+    SDL_RenderDrawPoint(render1, 4, 6); // Draw a point at (0, 0)
 
     //SDL_RenderDrawLineF(render1,4,5,174,305); // for line 
     SDL_RenderPresent(render1);  // Update the renderer to display the point
