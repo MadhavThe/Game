@@ -6,6 +6,12 @@ using namespace std;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 
+//typedef struct SDL_Rect
+//{
+//    int x, y;
+//    int w, h;
+//} SDL_Rect;
+
 void handleInput(bool& isRunning) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -25,8 +31,16 @@ void render() {
     SDL_RenderDrawPoint(renderer, 10, 305);
 
     // Draw a line
-    SDL_RenderDrawLineF(renderer, 4, 5, 174, 305);
-
+   /* SDL_RenderDrawLineF(renderer, 4, 5, 174, 305);*/
+    //SDL_RenderDrawRect(renderer,rect);
+	// Draw a rectangle
+    SDL_Rect rect = { 5, 5, 400, 400 };
+	  // Blue
+       SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	   SDL_RenderFillRect(renderer, &rect);
+       SDL_Rect rect1 = { 25,25,100,100 };
+       SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	   SDL_RenderFillRect(renderer, &rect1);
     // Update the renderer to display
     SDL_RenderPresent(renderer);
     SDL_Delay(3000);   // Wait for 3000ms (3 seconds)
