@@ -19,7 +19,9 @@ void render() {
     // Clear screen with yellow color
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);  // Yellow
     SDL_RenderClear(renderer);
-
+    // Draw a line
+    // SDL_RenderDrawLineF(renderer, 4, 5, 174, 305);
+    
     // Draw a point at (10, 305)
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black for visibility
     SDL_RenderDrawPoint(renderer, 10, 305);
@@ -33,6 +35,12 @@ void render() {
     SDL_Rect rect1 = { 25, 25, 100, 100 };
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
     SDL_RenderFillRect(renderer, &rect1);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black
+   // draw connected lines using SDL_RenderDrawLines
+        SDL_Point points[5] = {
+            {100, 300}, {200, 400}, {300, 300}, {400, 400}, {500, 300}
+    };
+    SDL_RenderDrawLines(renderer, points, 5);
 
     // Update the renderer to display changes
     SDL_RenderPresent(renderer);
