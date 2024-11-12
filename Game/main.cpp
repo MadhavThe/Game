@@ -34,11 +34,20 @@ void drawCircle(int cX, int cY, int r) {
 void handleInput(bool& isRunning) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+        // Check if the user closed the window
         if (event.type == SDL_QUIT) {
             isRunning = false;
         }
+        // Check for key press events
+        else if (event.type == SDL_KEYDOWN) {
+            // Quit if ESC key is pressed
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                isRunning = false;
+            }
+        }
     }
 }
+
 
 void render() {
     // Clear screen with yellow color
