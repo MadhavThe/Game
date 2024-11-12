@@ -6,6 +6,31 @@ using namespace std;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 
+void drawCircle(int cX, int cY, int r) {
+    int x = r;
+    int y = 0;
+    int d = 1 - x;
+    while (y <= x) {
+        SDL_Point points[8] = {
+            {cX - x, cY - y}, {cX - x, cY + y},
+            {cX + x, cY - y}, {cX + x, cY + y},
+            {cX - y, cY - x}, {cX - y, cY + x},
+            {cX + y, cY - x}, {cX + y, cY + x}
+        };
+        SDL_RenderDrawPoints(renderer, points, 8);
+
+        y++;
+        if (d <= 0) {
+            d += 2 * y + 1;
+        }
+        else {
+            x--;
+            d += 2 * (y - x) + 1;
+        }
+    }
+}
+
+
 void handleInput(bool& isRunning) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -41,7 +66,9 @@ void render() {
             {100, 300}, {200, 400}, {300, 300}, {400, 400}, {500, 300}
     };
     SDL_RenderDrawLines(renderer, points, 5);
-
+       
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
+    drawCircle(300, 300, 100);
     // Update the renderer to display changes
     SDL_RenderPresent(renderer);
 }
