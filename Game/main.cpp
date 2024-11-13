@@ -9,6 +9,7 @@ using namespace std;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 SDL_Rect rect;
+SDL_Rect rect1;
 
 void drawCircle(int cX, int cY, int r) {
     int x = r;
@@ -35,7 +36,7 @@ void drawCircle(int cX, int cY, int r) {
 }
 
 
-void handleInput(bool& isRunning, bool& moveLeft, bool& moveRight) {
+void handleInput(bool& isRunning, bool& moveLeft, bool& moveRight, bool& moveUp, bool& moveDown) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
@@ -45,11 +46,18 @@ void handleInput(bool& isRunning, bool& moveLeft, bool& moveRight) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 isRunning = false;
             }
+
             else if (event.key.keysym.sym == SDLK_LEFT) {
                 moveLeft = true;
             }
             else if (event.key.keysym.sym == SDLK_RIGHT) {
                 moveRight = true;
+            }
+            else if (event.key.keysym.sym == SDLK_UP) {
+                moveUp = true;
+            }
+            else if (event.key.keysym.sym == SDLK_DOWN) {
+                moveDown = true;
             }
         }
         else if (event.type == SDL_KEYUP) {
@@ -59,23 +67,46 @@ void handleInput(bool& isRunning, bool& moveLeft, bool& moveRight) {
             else if (event.key.keysym.sym == SDLK_RIGHT) {
                 moveRight = false;
             }
+            else if (event.key.keysym.sym == SDLK_UP) {
+                moveUp = false;
+            }
+            else if (event.key.keysym.sym == SDLK_DOWN) {
+                moveDown = false;
+            }
         }
     }
 }
 
-void move(SDL_Rect& rect, bool moveLeft, bool moveRight) {
-    if (moveLeft) {
-        rect.x -= 5;
-        if (rect.x < 0)
-            rect.x = 800-200;
-	}
-	else if (moveRight) {
-        rect.x += 5;
-        if (rect.x+200 > 800)
-            rect.x = 0;
+    void move(SDL_Rect & rect, bool moveLeft, bool moveRight, bool& moveUp, bool& moveDown) {
+        if (moveLeft) {
+            rect.x -= 5;
+            if (rect.x < 0)
+                rect.x = 800 - 200;
+        }
+        else if (moveRight) {
+            rect.x += 5;
+            if (rect.x + 200 > 800)
+                rect.x = 0;
+        }
+        else if (moveUp) {
+			rect.y -= 5;
+			if (rect.y < 0)
+				rect.y = 600 - 200;
+        }
+        else if (moveDown) {
+            rect.y += 5;
+            if (rect.y + 200 > 600)
+                rect.y = 0;
+        }
     }
+void move1(SDL_Rect& rect1) {
+	rect1.x += 5;
+	if (rect1.x + 100 > 800)
+		rect1.x = 0;
+	rect1.y += 5;
+	if (rect1.y + 100 > 600)
+		rect1.y = 0;
 }
-
 
 void render() {
     // Clear screen with yellow color
@@ -92,19 +123,18 @@ void render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);  // Blue
     SDL_RenderFillRect(renderer, &rect);
 
-    // Draw a red rectangle inside the blue one
- //   SDL_Rect rect1 = { 25, 25, 100, 100 };
- //   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
- //   SDL_RenderFillRect(renderer, &rect1);
-	//SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black
+    // Draw a red rectangle inside the blue 
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
+    SDL_RenderFillRect(renderer, &rect1);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black
  //  // draw connected lines using SDL_RenderDrawLines
- //       SDL_Point points[5] = {
- //           {100, 300}, {200, 400}, {300, 300}, {400, 400}, {500, 300}
- //   };
- //   SDL_RenderDrawLines(renderer, points, 5);
+        SDL_Point points[5] = {
+            {100, 300}, {200, 400}, {300, 300}, {400, 400}, {500, 300}
+    };
+    SDL_RenderDrawLines(renderer, points, 5);
  //      
- //   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
- //   drawCircle(300, 300, 100);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
+    drawCircle(300, 300, 100);
  //   // Update the renderer to display changes
     SDL_RenderPresent(renderer);
 }
@@ -130,12 +160,16 @@ int main(int argc, char* args[]) {
         return 1;
     }
     rect = { 5, 5, 200, 200 };
+    rect1 = { 25, 25, 100, 100 };
     bool isRunning = true;
 	bool moveLeft = false;
 	bool moveRight = false;
+	bool moveUp = false;
+	bool moveDown = false;
     while (isRunning) {
-        handleInput(isRunning,moveLeft,moveRight); // Handle window events
-		move(rect,moveLeft,moveRight);              // Move the rectangle
+        handleInput(isRunning,moveLeft,moveRight,moveUp,moveDown); // Handle window events
+		move(rect,moveLeft,moveRight,moveUp,moveDown);              // Move the rectangle
+        move1(rect1);
         render();               // Render graphics
         SDL_Delay(16);          // Small delay for ~60 FPS rendering
     }
