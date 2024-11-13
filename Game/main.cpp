@@ -1,10 +1,14 @@
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_atomic.h>
+#include <SDL_events.h>
+
 #include <iostream>
 using namespace std;
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
+SDL_Rect rect;
 
 void drawCircle(int cX, int cY, int r) {
     int x = r;
@@ -31,20 +35,44 @@ void drawCircle(int cX, int cY, int r) {
 }
 
 
-void handleInput(bool& isRunning) {
+void handleInput(bool& isRunning, bool& moveLeft, bool& moveRight) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        // Check if the user closed the window
         if (event.type == SDL_QUIT) {
             isRunning = false;
         }
-        // Check for key press events
         else if (event.type == SDL_KEYDOWN) {
-            // Quit if ESC key is pressed
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 isRunning = false;
             }
+            else if (event.key.keysym.sym == SDLK_LEFT) {
+                moveLeft = true;
+            }
+            else if (event.key.keysym.sym == SDLK_RIGHT) {
+                moveRight = true;
+            }
         }
+        else if (event.type == SDL_KEYUP) {
+            if (event.key.keysym.sym == SDLK_LEFT) {
+                moveLeft = false;
+            }
+            else if (event.key.keysym.sym == SDLK_RIGHT) {
+                moveRight = false;
+            }
+        }
+    }
+}
+
+void move(SDL_Rect& rect, bool moveLeft, bool moveRight) {
+    if (moveLeft) {
+        rect.x -= 5;
+        if (rect.x < 0)
+            rect.x = 800-200;
+	}
+	else if (moveRight) {
+        rect.x += 5;
+        if (rect.x+200 > 800)
+            rect.x = 0;
     }
 }
 
@@ -57,28 +85,27 @@ void render() {
     // SDL_RenderDrawLineF(renderer, 4, 5, 174, 305);
     
     // Draw a point at (10, 305)
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black for visibility
-    SDL_RenderDrawPoint(renderer, 10, 305);
+    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black for visibility
+    //SDL_RenderDrawPoint(renderer, 10, 305);
 
     // Draw a blue rectangle
-    SDL_Rect rect = { 5, 5, 400, 400 };
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);  // Blue
     SDL_RenderFillRect(renderer, &rect);
 
     // Draw a red rectangle inside the blue one
-    SDL_Rect rect1 = { 25, 25, 100, 100 };
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
-    SDL_RenderFillRect(renderer, &rect1);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black
-   // draw connected lines using SDL_RenderDrawLines
-        SDL_Point points[5] = {
-            {100, 300}, {200, 400}, {300, 300}, {400, 400}, {500, 300}
-    };
-    SDL_RenderDrawLines(renderer, points, 5);
-       
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
-    drawCircle(300, 300, 100);
-    // Update the renderer to display changes
+ //   SDL_Rect rect1 = { 25, 25, 100, 100 };
+ //   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
+ //   SDL_RenderFillRect(renderer, &rect1);
+	//SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black
+ //  // draw connected lines using SDL_RenderDrawLines
+ //       SDL_Point points[5] = {
+ //           {100, 300}, {200, 400}, {300, 300}, {400, 400}, {500, 300}
+ //   };
+ //   SDL_RenderDrawLines(renderer, points, 5);
+ //      
+ //   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
+ //   drawCircle(300, 300, 100);
+ //   // Update the renderer to display changes
     SDL_RenderPresent(renderer);
 }
 
@@ -102,10 +129,13 @@ int main(int argc, char* args[]) {
         SDL_Quit();
         return 1;
     }
-
+    rect = { 5, 5, 200, 200 };
     bool isRunning = true;
+	bool moveLeft = false;
+	bool moveRight = false;
     while (isRunning) {
-        handleInput(isRunning); // Handle window events
+        handleInput(isRunning,moveLeft,moveRight); // Handle window events
+		move(rect,moveLeft,moveRight);              // Move the rectangle
         render();               // Render graphics
         SDL_Delay(16);          // Small delay for ~60 FPS rendering
     }
