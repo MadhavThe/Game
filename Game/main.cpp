@@ -83,17 +83,17 @@ void handleInput(bool& isRunning, bool& moveLeft, bool& moveRight, bool& moveUp,
             if (rect.x < 0)
                 rect.x = 800 - 200;
         }
-        else if (moveRight) {
+         if (moveRight) {
             rect.x += 5;
             if (rect.x + 200 > 800)
                 rect.x = 0;
         }
-        else if (moveUp) {
+         if (moveUp) {
 			rect.y -= 5;
 			if (rect.y < 0)
 				rect.y = 600 - 200;
         }
-        else if (moveDown) {
+         if (moveDown) {
             rect.y += 5;
             if (rect.y + 200 > 600)
                 rect.y = 0;
