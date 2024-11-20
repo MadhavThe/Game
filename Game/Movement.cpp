@@ -1,15 +1,16 @@
 #include "Movement.hpp"
+#include "Input.hpp"
 
-void move(SDL_Rect& rect, bool moveLeft, bool moveRight, bool moveUp, bool moveDown) {
-    if (moveLeft) rect.x -= 5;
-    if (moveRight) rect.x += 5;
-    if (moveUp) rect.y -= 5;
-    if (moveDown) rect.y += 5;
+void move(SDL_Rect& recto, bool moveLeft, bool moveRight, bool moveUp, bool moveDown) {
+    if (moveLeft) recto.x -= 5;
+    if (moveRight) recto.x += 5;
+    if (moveUp) recto.y -= 5;
+    if (moveDown) recto.y += 5;
 
-    if (rect.x < 0) rect.x = 800 - rect.w;
-    if (rect.x + rect.w > 800) rect.x = 0;
-    if (rect.y < 0) rect.y = 600 - rect.h;
-    if (rect.y + rect.h > 600) rect.y = 0;
+    if (recto.x < 0) recto.x = 800 - recto.w;
+    if (recto.x + recto.w > 800) recto.x = 0;
+    if (recto.y < 0) recto.y = 600 - recto.h;
+    if (recto.y + recto.h > 600) recto.y = 0;
 }
 
 void move1(SDL_Rect& rect1) {

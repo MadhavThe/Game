@@ -1,5 +1,6 @@
 #include "Input.hpp"
 
+
 void Input::handleInput(bool& isRunning, bool& moveLeft, bool& moveRight, bool& moveUp, bool& moveDown) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -21,3 +22,4 @@ void Input::handleInput(bool& isRunning, bool& moveLeft, bool& moveRight, bool& 
         }
     }
 }
+// Compare this snippet from Game/Input.cpp:
