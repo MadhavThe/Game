@@ -1,35 +1,34 @@
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h>
 #include "App.hpp"
 #include "Input.hpp"
-#include "Character.hpp"
 #include "Movement.hpp"
-#include <SDL2/SDL.h>
-#include <iostream>
+#include "Character.hpp"
 
-int main(int argc , char args[]) {
+int main(int argc, char* args[]) {
     App app;
-    if (!app.init()) return 1;
+    if (!app.init()) return 0;
 
-    SDL_Color red = { 255, 0, 0, 255 }; // Character color (Red)
-    Character character(app.getRenderer(), 100, 100, 50, 50, red);
+    // Set the background color (for clearing the screen)
+    SDL_SetRenderDrawColor(app.getRenderer(), 255, 255, 255, 255);  // White background
 
-    bool isRunning = true;
-    bool moveLeft = false, moveRight = false, moveUp = false, moveDown = false;
+    SDL_Color red = { 255, 0, 0, 255 };  // Red color for the character
+    bool isRunning = true, moveLeft = false, moveRight = false, moveUp = false, moveDown = false;
     Input input;
+    Character character(app.getRenderer(), 100, 100, 100, 100, red);
 
     while (isRunning) {
-        input.handleInput(isRunning, moveLeft, moveRight, moveUp, moveDown);
+        input.handleInput(isRunning, moveLeft, moveRight, moveUp, moveDown);  // Handle user input
 
-        // Update the character's position and render it
+        // Move the character based on input
         character.moveCharacter(moveLeft, moveRight, moveUp, moveDown);
 
-        SDL_SetRenderDrawColor(app.getRenderer(), 255, 255, 255, 255); // Clear the screen with white
+        // Clear the screen and render the character
         SDL_RenderClear(app.getRenderer());
+        character.render();  // Draw the character
 
-        // Render the character
-        character.render();
-
-        SDL_RenderPresent(app.getRenderer());
-        SDL_Delay(16); // ~60 FPS
+        SDL_RenderPresent(app.getRenderer());  // Present the renderer to display the changes
+        SDL_Delay(16);  // Delay for ~60 FPS
     }
 
     app.cleanup();
